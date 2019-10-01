@@ -1,0 +1,9 @@
+## Interface: 11302  -- Required. Game version. 
+## Title: Lootr -- Name shown when viewing AddOn list.
+## Version: 0.1  -- Version number (if there are multiple versions)
+## Author: erenani  -- author of 
+## DefaultState: enabled
+## SavedVariables: 
+
+Core.lua
+
