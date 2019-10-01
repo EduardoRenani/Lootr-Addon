@@ -1,0 +1,1 @@
+print("Lootr Addon loaded successfully!")
