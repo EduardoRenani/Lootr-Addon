@@ -63,3 +63,21 @@ function Frames:displayGuildBag()
     return BagFrame
 end
 
+function Frames:displayIcon() 
+    IconFrame = CreateFrame(
+        "Button", 
+        "Icon", 
+        UIParent,
+        "UIRadioButtonTemplate"
+    )
+
+    IconFrame:SetSize(30, 30)
+    IconFrame:SetPoint("CENTER", UIParent, 0, 0)
+    IconFrame.text = IconFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    IconFrame.text:SetPoint("CENTER")
+    IconFrame.text:SetText("L")
+    IconFrame.title = IconFrame:CreateFontString(nil, "OVERLAY")
+    IconFrame.title:SetFontObject("GameFontHighlight")
+    --print(IconFrame:SetTexture())
+    return IconFrame
+end

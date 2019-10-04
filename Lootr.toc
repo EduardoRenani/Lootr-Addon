@@ -3,7 +3,11 @@
 ## Version: 0.1  -- Version number (if there are multiple versions)
 ## Author: erenani  -- author of 
 ## DefaultState: enabled
+## SavedVariables: LootrDB
+## OptionalDeps: Ace3
+## X-Embeds: Ace3
 
+embeds.xml
 Frames.lua
 Core.lua
 
