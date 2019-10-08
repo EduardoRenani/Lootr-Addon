@@ -8,6 +8,7 @@
 ## X-Embeds: Ace3
 
 embeds.xml
+BagAPI.lua
 Frames.lua
 Core.lua
 

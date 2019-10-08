@@ -3,7 +3,7 @@ local _, core = ...
 core.Frames = {}
 local Frames = core.Frames
 
-function Frames:displayGuildBag()
+function Frames:CreateGuildBag()
     --[[
         CreateFrame Arguments:
         1. The type of frame. (Frame is the default frame)
@@ -31,15 +31,17 @@ function Frames:displayGuildBag()
         for j = 0,4,1 do 
             ItemSlot = CreateFrame(
                 "Button",
-                "Slot",
+                "Slot"..i..j,
                 BagFrame,
                 "ItemButtonTemplate"
             )
             ItemSlot:SetPoint("TOPLEFT", BagFrame, "TOPLEFT", 30 + 50*j, -50 -60*i) -- point, relativeFrame (default is UIParent ), relativePoint, xOffset, yOffset
-            ItemSlot:SetScript("OnClick", function()
-                print("CLICKOU NESSA MARIMBA")
+            ItemSlot:SetScript("OnClick", function(self, button, down)
+                local items = core.BagAPI:getAllPlayerItens()
+                local key, value = next(items)
+                self.icon:SetTexture(value.texture)
+            
             end)
-
         end
     end
 
@@ -61,23 +63,4 @@ function Frames:displayGuildBag()
     QRGenButton.title = QRGenButton:CreateFontString(nil, "OVERLAY")
     QRGenButton.title:SetFontObject("GameFontHighlight")
     return BagFrame
-end
-
-function Frames:displayIcon() 
-    IconFrame = CreateFrame(
-        "Button", 
-        "Icon", 
-        UIParent,
-        "UIRadioButtonTemplate"
-    )
-
-    IconFrame:SetSize(30, 30)
-    IconFrame:SetPoint("CENTER", UIParent, 0, 0)
-    IconFrame.text = IconFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    IconFrame.text:SetPoint("CENTER")
-    IconFrame.text:SetText("L")
-    IconFrame.title = IconFrame:CreateFontString(nil, "OVERLAY")
-    IconFrame.title:SetFontObject("GameFontHighlight")
-    --print(IconFrame:SetTexture())
-    return IconFrame
 end
