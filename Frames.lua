@@ -3,6 +3,11 @@ local _, core = ...
 core.Frames = {}
 local Frames = core.Frames
 
+-- function CmdClick()
+--     print("click")
+--     DEFAULT_CHAT_FRAME.editBox:SetText("/click ActionBarButton1 RightButton true") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
+-- end
+
 function Frames:CreateGuildBag()
     --[[
         CreateFrame Arguments:
@@ -26,7 +31,7 @@ function Frames:CreateGuildBag()
     BagFrame.text:SetText("Guild Bag")
     BagFrame.title = BagFrame:CreateFontString(nil, "OVERLAY")
     BagFrame.title:SetFontObject("GameFontHighlight")
-
+    BagFrame.items = {}
     for i = 0,1,1 do 
         for j = 0,4,1 do 
             ItemSlot = CreateFrame(
@@ -35,12 +40,26 @@ function Frames:CreateGuildBag()
                 BagFrame,
                 "ItemButtonTemplate"
             )
+            ItemSlot.index = i..j
             ItemSlot:SetPoint("TOPLEFT", BagFrame, "TOPLEFT", 30 + 50*j, -50 -60*i) -- point, relativeFrame (default is UIParent ), relativePoint, xOffset, yOffset
             ItemSlot:SetScript("OnClick", function(self, button, down)
-                local items = core.BagAPI:getAllPlayerItens()
-                local key, value = next(items)
-                self.icon:SetTexture(value.texture)
-            
+                if core.addon.selectedItem ~= nil then
+                    _, _, _, _, _, _,_, itemStackCount, _, itemTexture, _ = GetItemInfo(core.addon.selectedItem)
+                    self.icon:SetTexture(itemTexture)
+                    local count = nil
+                    if itemStackCount == nil then
+                        count = 1
+                    else 
+                        count = itemStackCount
+                    end
+                    local item = {id = core.addon.selectedItem, count = count}
+                    BagFrame.items[self.index] = item
+                    core.addon.selectedItem = nil
+                    --CmdClick()
+                else
+                    self.icon:SetTexture(nil)
+                    BagFrame.items[self.index] = nil
+                end
             end)
         end
     end
@@ -64,3 +83,4 @@ function Frames:CreateGuildBag()
     QRGenButton.title:SetFontObject("GameFontHighlight")
     return BagFrame
 end
+

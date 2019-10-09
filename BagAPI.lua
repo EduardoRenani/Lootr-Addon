@@ -48,7 +48,7 @@ function BagAPI:getAllPlayerItens()
         items = concatenateTables(items, bagItems) -- insert all bag itens into all itens table  
         i = i + 1
     end
-
+    table.remove(items, 1) --remove bag item
     return items
 
 end
