@@ -50,5 +50,34 @@ function BagAPI:getAllPlayerItens()
     end
     table.remove(items, 1) --remove bag item
     return items
+end
 
+function BagAPI:isItemInBagSoulbound(bagId,slotId)
+    --[[ /dump IsItemInBagSoulbound(0,1)
+            Return "true" if item is soulbound
+            Return "false" if item is BoE, BoA or don't has bound
+            Return "nil" if no item at selected location
+    --]]
+    local iLoc, iLink, isBound, sBound, frame, text, i
+    iLoc=ItemLocation:CreateFromBagAndSlot(bagId, slotId)
+    if C_Item.DoesItemExist(iLoc) then
+        iLink  =C_Item.GetItemLink(iLoc)
+        isBound=C_Item.IsBound(iLoc)
+        if (isBound==false) then return false end
+        sBound=_G["ITEM_SOULBOUND"]
+        frame=_G["ContainerFrame"..tostring(bagId+1).."Item"..tostring(slotId)]
+        GameTooltip:SetOwner(frame,ANCHOR_NONE)
+        GameTooltip:SetBagItem(bagId,slotId)
+        for i=1,GameTooltip:NumLines() do
+            text=_G["GameTooltipTextLeft"..tostring(i)]:GetText()
+            if (text==sBound) then
+            GameTooltip:Hide()
+            return true
+            end
+        end
+        GameTooltip:Hide()
+        return false
+    else
+        return nil
+    end
 end

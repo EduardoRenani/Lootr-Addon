@@ -3,10 +3,10 @@ local _, core = ...
 core.Frames = {}
 local Frames = core.Frames
 
--- function CmdClick()
---     print("click")
---     DEFAULT_CHAT_FRAME.editBox:SetText("/click ActionBarButton1 RightButton true") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
--- end
+function CmdClick()
+    print("click")
+    DEFAULT_CHAT_FRAME.editBox:SetText("/click ActionBarButton1 RightButton true") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
+end
 
 function Frames:CreateGuildBag()
     --[[
@@ -32,6 +32,7 @@ function Frames:CreateGuildBag()
     BagFrame.title = BagFrame:CreateFontString(nil, "OVERLAY")
     BagFrame.title:SetFontObject("GameFontHighlight")
     BagFrame.items = {}
+    BagFrame.bagSlotsOccupied = {}
     for i = 0,1,1 do 
         for j = 0,4,1 do 
             ItemSlot = CreateFrame(
@@ -43,21 +44,33 @@ function Frames:CreateGuildBag()
             ItemSlot.index = i..j
             ItemSlot:SetPoint("TOPLEFT", BagFrame, "TOPLEFT", 30 + 50*j, -50 -60*i) -- point, relativeFrame (default is UIParent ), relativePoint, xOffset, yOffset
             ItemSlot:SetScript("OnClick", function(self, button, down)
-                if core.addon.selectedItem ~= nil then
-                    _, _, _, _, _, _,_, itemStackCount, _, itemTexture, _ = GetItemInfo(core.addon.selectedItem)
-                    self.icon:SetTexture(itemTexture)
-                    local count = nil
-                    if itemStackCount == nil then
-                        count = 1
-                    else 
-                        count = itemStackCount
+                if core.addon.selectedItem ~= nil and core.addon.selectedBagSlot ~= nil then
+                    if BagFrame.bagSlotsOccupied[core.addon.selectedBagSlot] == nil then
+                        item = core.addon.selectedItem
+                        self.icon:SetTexture(item.texture)
+                        self.icon.text = self:CreateFontString(nil, "OVERLAY", "NumberFontNormal")
+                        self.icon.text:SetPoint("BOTTOMRIGHT", -5, 3)
+                        self.icon.text:SetText(item.count)
+                        local count = nil
+                        if item.count == nil then
+                            count = 1
+                        else 
+                            count = item.count
+                        end
+                        local item = {id = core.addon.selectedItem, count = count, bagSlot = core.addon.selectedBagSlot}
+                        BagFrame.items[self.index] = item.id
+                        BagFrame.bagSlotsOccupied[core.addon.selectedBagSlot] = true
+                        core.addon.selectedItem = nil
+                    else
+                        core.addon.selectedItem = nil
+                        core.addon.selectedBagSlot = nil
+                        print("|cFFFFFF00 [Lootr]: Cannot drop Item: Item already inside the bag");
                     end
-                    local item = {id = core.addon.selectedItem, count = count}
-                    BagFrame.items[self.index] = item
-                    core.addon.selectedItem = nil
-                    --CmdClick()
                 else
                     self.icon:SetTexture(nil)
+                    self.icon.text:SetText(nil)
+                    itemBagSlot = BagFrame.items[self.index].bagSlot
+                    BagFrame.bagSlotsOccupied[itemBagSlot] = nil
                     BagFrame.items[self.index] = nil
                 end
             end)

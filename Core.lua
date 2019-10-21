@@ -12,15 +12,20 @@ local LootrLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Lootr!", {
         core.BagFrame = BagFrame
         success = BagFrame:RegisterEvent("ITEM_LOCKED")
         success = BagFrame:RegisterEvent("ITEM_UNLOCKED")
-        BagFrame:SetScript("OnEvent", function(self, event, bagID, slot)
+        BagFrame:SetScript("OnEvent", function(self, event, bagID, slot)      
             if event == "ITEM_LOCKED" then
                 local itemId = GetContainerItemID(bagID, slot);
-                print(addon.selectedItem)
-                addon.selectedItem = itemId
+                local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bagID, slot)
+                if core.BagAPI:isItemInBagSoulbound(bagID, slot) == false then
+                    addon.selectedItem = {id = itemId, count = itemCount, texture = texture}
+                    addon.selectedBagSlot = bagID..""..slot -- checks if item from given bagSlot from player's bag is already inside guid bag
+                else
+                    print("|cFFFFFF00 [Lootr]: Cannot select item: "..itemLink.." |cFFFFFF00 is Soulbound");
+                end
             end
             if event == "ITEM_UNLOCKED" then
-                print(addon.selectedItem)
-                addon.selectedItem = nil
+                    addon.selectedItem = nil
+                    addon.selectedBagSlot= nil
             end
         end)
     end,
