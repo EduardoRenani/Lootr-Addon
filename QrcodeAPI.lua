@@ -1,8 +1,5 @@
+local qrencode;
 local _, core = ...
-
-core.QrcodeAPI = {}
-local QrcodeAPI = core.QrcodeAPI
-
 function reinit()
 	for y=1,40 do
 			for x=1,40 do
@@ -12,49 +9,48 @@ function reinit()
 end
 
 function init(event,arg1)
-    WQR_VARS={};
-    for y=1,40 do
-        for x=1,40 do
-            local f=CreateFrame("Frame","qr"..x.."_"..y,QR.viewFrame.dotHolder);
-            f:SetFrameStrata("DIALOG");
-            f:SetWidth(4);
-            f:SetHeight(4);
-            f:SetParent(QR.viewFrame.dotHolder);
-            f.texture = f:CreateTexture();
-            f.texture:SetAllPoints(f);
-            f.texture:SetColorTexture(0,0,0);
-            f:SetPoint("CENTER",-78+((y-1)*4),-78+((x-1)*4));
-            f:Show();
-            f:SetAlpha(0);
-        end
-    end
+		WQR_VARS={};
+		for y=1,40 do
+			for x=1,40 do
+				local f=CreateFrame("Frame","qr"..x.."_"..y,QR.viewFrame.dotHolder);
+				f:SetFrameStrata("DIALOG");
+				f:SetWidth(4);
+				f:SetHeight(4);
+				f:SetParent(QR.viewFrame.dotHolder);
+				f.texture = f:CreateTexture();
+				f.texture:SetAllPoints(f);
+				f.texture:SetColorTexture(0,0,0);
+				f:SetPoint("CENTER",-78+((y-1)*4),-78+((x-1)*4));
+				f:Show();
+				f:SetAlpha(0);
+			end
+		end
 
-    local origChatFrame_OnHyperlinkShow = ChatFrame_OnHyperlinkShow; -- (1)
-    ChatFrame_OnHyperlinkShow = function(...) -- (2)
-    local chatFrame, link, text, button = ...; -- (3)
-    local n=nil;
-    local s=nil;
-    n,s=string.match(link,'player:([^\-]+)\-([^:]+)');
+		local origChatFrame_OnHyperlinkShow = ChatFrame_OnHyperlinkShow; -- (1)
+		ChatFrame_OnHyperlinkShow = function(...) -- (2)
+   		local chatFrame, link, text, button = ...; -- (3)
+   		local n=nil;
+   		local s=nil;
+   		n,s=string.match(link,'player:([^\-]+)\-([^:]+)');
    		
-    if (s==nil) then
-        n = string.match(link,'player:([^:]+)');
-        s = GetRealmName();
-        playerLink=n;
-    else
-        playerLink=n.."\-"..s;
-    end
-    if(n~=nil and s~=nil) then
-        playerLinkPending=true;
-        playerName=n;
-        playerRealm=s;
-    end
+   		if (s==nil)then
+   			n = string.match(link,'player:([^:]+)');
+   			s = GetRealmName();
+   			playerLink=n;
+   		else
+   			playerLink=n.."\-"..s;
+   		end
+   		if(n~=nil and s~=nil)then
+   			playerLinkPending=true;
+   			playerName=n;
+   			playerRealm=s;
+   		end
       return origChatFrame_OnHyperlinkShow(...);
-    end
-
+   end
 end
 
 local function qrgen(str)
-    reinit();
+	reinit();
 	a,t=QR:qrcode(str);
 	QR.viewFrame:SetWidth((#t*4)+16)
 	QR.viewFrame:SetHeight((#t*4)+16)
@@ -84,10 +80,38 @@ local function initQR()
 		
 end
 
+SLASH_QRTEST1 = '/qr';
 
-local function QrcodeAPI:handler(str)
-	print("Generating QR code for bag items");
-    initQR();
+local function handler()
+    print("Generating QR code for collection");
+    guildName, _, _ = GetGuildInfo("player");
+    
+    for i=0, 32 do
+        if(string.len(guildName) < i) then
+            guildName = "0"..guildName
+        end
+    end
+
+    str = guildName
+    
+    for key, item in pairs(core.BagFrame.items) do
+        if(string.len(item.count) < 2) then
+            item.count = "0"..item.count
+        end
+        
+        for j=2, 5 do
+            if(string.len(item.id) < j) then
+                item.id = "0"..item.id
+            end
+        end
+        
+       str = str..item.count..item.id
+    end
+
+	initQR();
     viewFrame:Show();
-    qrgen(str)
+    
+    qrgen(str, 2)
 end
+
+SlashCmdList["QRTEST"] = handler;

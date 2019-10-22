@@ -3,6 +3,10 @@ local _, core = ...
 core.Frames = {}
 local Frames = core.Frames
 
+function CmdSlashQrTrigger() --runs slash command to trigger qrcode generator
+     DEFAULT_CHAT_FRAME.editBox:SetText("/qr") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
+ end
+
 function Frames:CreateGuildBag()
     --[[
         CreateFrame Arguments:
@@ -82,7 +86,7 @@ function Frames:CreateGuildBag()
     QRGenButton:SetSize(180, 36)
     QRGenButton:SetPoint("BOTTOM", BagFrame, 0, 30) -- point, relativeFrame (default is UIParent ), relativePoint, xOffset, yOffset
     QRGenButton:SetScript("OnClick", function()
-        --core.QrcodeAPI:handler(BagFrame.items)
+        CmdSlashQrTrigger();
     end)
     QRGenButton.text = QRGenButton:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     QRGenButton.text:SetPoint("CENTER")

@@ -3,14 +3,16 @@
 ## Version: 0.1  -- Version number (if there are multiple versions)
 ## Author: erenani  -- author of 
 ## DefaultState: enabled
-## SavedVariables: LootrDB
+## SavedVariables: LootrDB, WQR_VARS
 ## OptionalDeps: Ace3
 ## X-Embeds: Ace3
 
+QrcodeAPI.xml
+qrencode.lua
 embeds.xml
 BagAPI.lua
 Frames.lua
 Core.lua
-QrcodeAPI.xml
-qrencode.lua
+
+
 
