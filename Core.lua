@@ -25,14 +25,13 @@ local LootrLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Lootr!", {
             end
             if event == "ITEM_UNLOCKED" then
                     addon.selectedItem = nil
-                    addon.selectedBagSlot= nil
             end
         end)
     end,
 })
 local icon = LibStub("LibDBIcon-1.0")
 
-function addon:OnInitialize() -- Obviously you'll need a ## SavedVariables: BunniesDB line in your TOC, duh! 
+function addon:OnInitialize() -- Obviously you'll need a ## SavedVariables
     self.db = LibStub("AceDB-3.0"):New("LootrDB", 
         { 
             profile = 

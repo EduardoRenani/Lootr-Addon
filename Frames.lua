@@ -3,11 +3,6 @@ local _, core = ...
 core.Frames = {}
 local Frames = core.Frames
 
-function CmdClick()
-    print("click")
-    DEFAULT_CHAT_FRAME.editBox:SetText("/click ActionBarButton1 RightButton true") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
-end
-
 function Frames:CreateGuildBag()
     --[[
         CreateFrame Arguments:
@@ -57,8 +52,8 @@ function Frames:CreateGuildBag()
                         else 
                             count = item.count
                         end
-                        local item = {id = core.addon.selectedItem, count = count, bagSlot = core.addon.selectedBagSlot}
-                        BagFrame.items[self.index] = item.id
+                        local item = {id = core.addon.selectedItem.id, count = count, bagSlot = core.addon.selectedBagSlot}
+                        BagFrame.items[self.index] = item
                         BagFrame.bagSlotsOccupied[core.addon.selectedBagSlot] = true
                         core.addon.selectedItem = nil
                     else
@@ -87,7 +82,7 @@ function Frames:CreateGuildBag()
     QRGenButton:SetSize(180, 36)
     QRGenButton:SetPoint("BOTTOM", BagFrame, 0, 30) -- point, relativeFrame (default is UIParent ), relativePoint, xOffset, yOffset
     QRGenButton:SetScript("OnClick", function()
-        --generate QRCode function
+        --core.QrcodeAPI:handler(BagFrame.items)
     end)
     QRGenButton.text = QRGenButton:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     QRGenButton.text:SetPoint("CENTER")

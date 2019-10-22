@@ -11,4 +11,6 @@ embeds.xml
 BagAPI.lua
 Frames.lua
 Core.lua
+QrcodeAPI.xml
+qrencode.lua
 
