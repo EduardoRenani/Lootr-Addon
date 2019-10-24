@@ -18,7 +18,6 @@ local LootrLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Lootr!", {
                 local texture, itemCount, locked, quality, readable, lootable, itemLink = GetContainerItemInfo(bagID, slot)
                 if core.BagAPI:isItemInBagSoulbound(bagID, slot) == false then
                     addon.selectedItem = {id = itemId, count = itemCount, texture = texture}
-                    addon.selectedBagSlot = bagID..""..slot -- checks if item from given bagSlot from player's bag is already inside guid bag
                 else
                     print("|cFFFFFF00 [Lootr]: Cannot select item: "..itemLink.." |cFFFFFF00 is Soulbound");
                 end
@@ -44,14 +43,15 @@ function addon:OnInitialize() -- Obviously you'll need a ## SavedVariables
         }) 
     icon:Register("Lootr!", LootrLDB, self.db.profile.minimap) 
     self:RegisterChatCommand("lootr", "lootrCommand") 
+
 end
 
 
-
 function addon:lootrCommand() 
-    print("-------GUILD BAG ITEMS-------")
-    for key, item in pairs(core.BagFrame.items) do
-        print(key..": "..item.id.." "..item.count)
+    print("-------AVAILABLE ITEMS-------")
+    for i, item in ipairs(core.BagAPI.availableItems) do
+        print(item)
     end
     print("-----------------------------")
 end 
+

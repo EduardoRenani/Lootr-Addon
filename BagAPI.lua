@@ -41,7 +41,7 @@ function getAllBagItems(bagId)
     return items
 end
 
-function BagAPI:getAllPlayerItens()
+function GetAllPlayerItems()
     local items = {} --initialize an empty table (object)
     for i = 0, TOTALBAGS - 1 do
         local bagItems = getAllBagItems(BACKPACK_CONTAINER + i) -- get bag object (list of itens)
@@ -52,7 +52,7 @@ function BagAPI:getAllPlayerItens()
     return items
 end
 
-function BagAPI:isItemInBagSoulbound(bagId,slotId)
+function BagAPI:isItemInBagSoulbound(bagId, slotId)
     --[[ /dump IsItemInBagSoulbound(0,1)
             Return "true" if item is soulbound
             Return "false" if item is BoE, BoA or don't has bound
@@ -80,4 +80,71 @@ function BagAPI:isItemInBagSoulbound(bagId,slotId)
     else
         return nil
     end
+end
+
+function BagAPI:initialize()
+    local items = GetAllPlayerItems()
+    BagAPI.availableItems = {}
+    local i = 1
+    for key, item in pairs(items) do
+        BagAPI.availableItems[i] = item.id..":"..item.count
+        i = i + 1 
+    end
+    BagAPI.availableItems.size = i
+end
+
+function formateGuildBagList()
+
+    local guildBagItems = {} --creates an array of id:count for all items currently in guild bag
+    local i = 1
+    for _, item in pairs(core.BagFrame.items) do
+    guildBagItems[i] = item.id..":"..item.count
+        i = i + 1
+    end
+    guildBagItems.size = i
+
+    return guildBagItems
+end
+
+function BagAPI:updateState()
+    local items = GetAllPlayerItems() 
+    BagAPI.availableItems = {}
+    local i = 1
+    for _, item in pairs(items) do -- creates an array of all items inside user bag
+        BagAPI.availableItems[i] = item.id..":"..item.count
+        i = i + 1 
+    end
+    BagAPI.availableItems.size = i
+
+    local guildBagItems = formateGuildBagList() 
+    for _, item in ipairs(guildBagItems) do -- subtract from player bag all items currently inside the guild bag
+        BagAPI:remove(item)
+    end
+
+    --now, all items inside the "availableItems" are the remaining set of ALL ITEMS - GUILD BAG ITEMS
+    --we will use the availableItems structure to determine if a picked item can be dropped inside guild bag.
+end
+
+function BagAPI:remove(element) --try to remove item from list of items inside player bag
+    local listSize = BagAPI.availableItems.size
+    local i = 1
+    while i <= listSize do
+        if(element == BagAPI.availableItems[i]) then
+            BagAPI.availableItems[i] = nil --if item exists, remove it 
+            return true --and tells it existed inside the array
+        else
+            i = i + 1
+        end
+    end
+    return false -- if item doesnt exist, tells the array doesnt contain it
+end
+
+function BagAPI:append(element)
+    local listSize = BagAPI.availableItems.size
+    local i = 1
+    while i <= listSize do
+        i = i + 1
+    end
+    BagAPI.availableItems[i] = element
+    BagAPI.availableItems.size = listSize + 1
 end

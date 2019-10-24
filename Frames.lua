@@ -31,7 +31,7 @@ function Frames:CreateGuildBag()
     BagFrame.title = BagFrame:CreateFontString(nil, "OVERLAY")
     BagFrame.title:SetFontObject("GameFontHighlight")
     BagFrame.items = {}
-    BagFrame.bagSlotsOccupied = {}
+    core.BagAPI:initialize()
     for i = 0,1,1 do 
         for j = 0,4,1 do 
             ItemSlot = CreateFrame(
@@ -43,9 +43,10 @@ function Frames:CreateGuildBag()
             ItemSlot.index = i..j
             ItemSlot:SetPoint("TOPLEFT", BagFrame, "TOPLEFT", 30 + 50*j, -50 -60*i) -- point, relativeFrame (default is UIParent ), relativePoint, xOffset, yOffset
             ItemSlot:SetScript("OnClick", function(self, button, down)
-                if core.addon.selectedItem ~= nil and core.addon.selectedBagSlot ~= nil then
-                    if BagFrame.bagSlotsOccupied[core.addon.selectedBagSlot] == nil then
-                        item = core.addon.selectedItem
+                if core.addon.selectedItem ~= nil then
+                    core.BagAPI:updateState()
+                    item = core.addon.selectedItem
+                    if  core.BagAPI:remove(item.id..":"..item.count) == true then
                         self.icon:SetTexture(item.texture)
                         self.icon.text = self:CreateFontString(nil, "OVERLAY", "NumberFontNormal")
                         self.icon.text:SetPoint("BOTTOMRIGHT", -5, 3)
@@ -56,20 +57,18 @@ function Frames:CreateGuildBag()
                         else 
                             count = item.count
                         end
-                        local item = {id = core.addon.selectedItem.id, count = count, bagSlot = core.addon.selectedBagSlot}
+                        local item = {id = core.addon.selectedItem.id, count = count}
                         BagFrame.items[self.index] = item
-                        BagFrame.bagSlotsOccupied[core.addon.selectedBagSlot] = true
                         core.addon.selectedItem = nil
                     else
                         core.addon.selectedItem = nil
-                        core.addon.selectedBagSlot = nil
                         print("|cFFFFFF00 [Lootr]: Cannot drop Item: Item already inside the bag");
                     end
                 else
                     self.icon:SetTexture(nil)
                     self.icon.text:SetText(nil)
-                    itemBagSlot = BagFrame.items[self.index].bagSlot
-                    BagFrame.bagSlotsOccupied[itemBagSlot] = nil
+                    local item = BagFrame.items[self.index]
+                    core.BagAPI:append(item.id..":"..item.count)
                     BagFrame.items[self.index] = nil
                 end
             end)
@@ -93,6 +92,7 @@ function Frames:CreateGuildBag()
     QRGenButton.text:SetText("Generate QR Code")
     QRGenButton.title = QRGenButton:CreateFontString(nil, "OVERLAY")
     QRGenButton.title:SetFontObject("GameFontHighlight")
+
     return BagFrame
 end
 
