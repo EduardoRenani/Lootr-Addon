@@ -3,8 +3,13 @@ local _, core = ...
 core.Frames = {}
 local Frames = core.Frames
 
+
+function Frames:CmdSlashQrSyncTrigger() --runs slash command to trigger qrcode generator for player sync
+    DEFAULT_CHAT_FRAME.editBox:SetText("/qrsync") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
+end
+
 function CmdSlashQrTrigger() --runs slash command to trigger qrcode generator
-     DEFAULT_CHAT_FRAME.editBox:SetText("/qr") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
+     DEFAULT_CHAT_FRAME.editBox:SetText("/qritems") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
  end
 
 function Frames:CreateGuildBag()

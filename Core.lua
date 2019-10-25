@@ -42,16 +42,12 @@ function addon:OnInitialize() -- Obviously you'll need a ## SavedVariables
             }, 
         }) 
     icon:Register("Lootr!", LootrLDB, self.db.profile.minimap) 
-    self:RegisterChatCommand("lootr", "lootrCommand") 
+    self:RegisterChatCommand("sync", "lootrCommand") 
 
 end
 
 
 function addon:lootrCommand() 
-    print("-------AVAILABLE ITEMS-------")
-    for i, item in ipairs(core.BagAPI.availableItems) do
-        print(item)
-    end
-    print("-----------------------------")
+    core.Frames:CmdSlashQrSyncTrigger();
 end 
 

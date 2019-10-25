@@ -80,9 +80,10 @@ local function initQR()
 		
 end
 
-SLASH_QRTEST1 = '/qr';
+SLASH_QRITEMS1 = '/qritems';
+SLASH_QRSYNC1 = '/qrsync';
 
-local function handler()
+local function handlerItems()
     print("Generating QR code for collection");
     guildName, _, _ = GetGuildInfo("player");
     
@@ -114,4 +115,15 @@ local function handler()
     qrgen(str, 2)
 end
 
-SlashCmdList["QRTEST"] = handler;
+local function handlerSync()
+    print("Generating QR code for player info");
+	name = UnitName("player") 
+	realm = GetRealmName()   
+	sanitiedRealm = string.gsub(realm, '[^A-Za-z]', function() return "" end) --ignore all non alphabetic characters
+	initQR();
+    viewFrame:Show();
+    qrgen(name.."0"..sanitiedRealm, 2)
+end
+
+SlashCmdList["QRITEMS"] = handlerItems;
+SlashCmdList["QRSYNC"] = handlerSync;
