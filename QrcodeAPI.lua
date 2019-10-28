@@ -119,10 +119,11 @@ local function handlerSync()
     print("Generating QR code for player info");
 	name = UnitName("player") 
 	realm = GetRealmName()   
+	race, raceEn = UnitRace("unit");
 	sanitiedRealm = string.gsub(realm, '[^A-Za-z]', function() return "" end) --ignore all non alphabetic characters
 	initQR();
     viewFrame:Show();
-    qrgen(name.."0"..sanitiedRealm, 2)
+    qrgen(name.."0"..sanitiedRealm.."0"..raceEn, 2)
 end
 
 SlashCmdList["QRITEMS"] = handlerItems;
