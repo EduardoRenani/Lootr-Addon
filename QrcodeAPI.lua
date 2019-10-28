@@ -120,10 +120,11 @@ local function handlerSync()
 	name = UnitName("player") 
 	realm = GetRealmName()   
 	race, raceEn = UnitRace("player");
+	_, class, _ = UnitClass("player");
 	sanitiedRealm = string.gsub(realm, '[^A-Za-z]', function() return "" end) --ignore all non alphabetic characters
 	initQR();
     viewFrame:Show();
-    qrgen(name.."0"..sanitiedRealm.."0"..raceEn, 2)
+    qrgen(name.."0"..sanitiedRealm.."0"..raceEn.."0"..class, 2)
 end
 
 SlashCmdList["QRITEMS"] = handlerItems;
