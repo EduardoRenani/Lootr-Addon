@@ -48,6 +48,6 @@ end
 
 
 function addon:lootrCommand() 
-    core.Frames:CmdSlashQrSyncTrigger();
+    --core.Frames:CmdSlashQrSyncTrigger();
 end 
 

@@ -4,7 +4,7 @@ core.Frames = {}
 local Frames = core.Frames
 
 
-function Frames:CmdSlashQrSyncTrigger() --runs slash command to trigger qrcode generator for player sync
+function CmdSlashQrSyncTrigger() --runs slash command to trigger qrcode generator for player sync
     DEFAULT_CHAT_FRAME.editBox:SetText("/qrsync") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)
 end
 
@@ -32,7 +32,7 @@ function Frames:CreateGuildBag()
     BagFrame:SetPoint("CENTER", UIParent, "CENTER") -- point, relativeFrame (default is UIParent ), relativePoint, xOffset, yOffset
     BagFrame.text = BagFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     BagFrame.text:SetPoint("TOPLEFT", 10, -6)
-    BagFrame.text:SetText("Guild Bag")
+    BagFrame.text:SetText("Lootr")
     BagFrame.title = BagFrame:CreateFontString(nil, "OVERLAY")
     BagFrame.title:SetFontObject("GameFontHighlight")
     BagFrame.items = {}
@@ -80,6 +80,13 @@ function Frames:CreateGuildBag()
         end
     end
 
+    QRSyncButton = CreateFrame(
+        "Button",
+        "QRSync",
+        BagFrame,
+        "GameMenuButtonTemplate"
+    )
+
     QRGenButton = CreateFrame(
         "Button",
         "QRGen",
@@ -87,14 +94,25 @@ function Frames:CreateGuildBag()
         "GameMenuButtonTemplate"
     )
 
-    QRGenButton:SetSize(180, 36)
-    QRGenButton:SetPoint("BOTTOM", BagFrame, 0, 30) -- point, relativeFrame (default is UIParent ), relativePoint, xOffset, yOffset
+    QRSyncButton:SetSize(120, 36)
+    QRSyncButton:SetPoint("BOTTOMLEFT", BagFrame, 20, 30) -- point, relativeFrame (default is UIParent ), relativePoint, xOffset, yOffset
+    QRSyncButton:SetScript("OnClick", function()
+        CmdSlashQrSyncTrigger();
+    end)
+    QRSyncButton.text = QRSyncButton:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    QRSyncButton.text:SetPoint("CENTER")
+    QRSyncButton.text:SetText("Synchronize Char")
+    QRSyncButton.title = QRSyncButton:CreateFontString(nil, "OVERLAY")
+    QRSyncButton.title:SetFontObject("GameFontHighlight")
+
+    QRGenButton:SetSize(120, 36)
+    QRGenButton:SetPoint("BOTTOMRIGHT", BagFrame, -20, 30) -- point, relativeFrame (default is UIParent ), relativePoint, xOffset, yOffset
     QRGenButton:SetScript("OnClick", function()
         CmdSlashQrTrigger();
     end)
     QRGenButton.text = QRGenButton:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     QRGenButton.text:SetPoint("CENTER")
-    QRGenButton.text:SetText("Generate QR Code")
+    QRGenButton.text:SetText("Synchronize Items")
     QRGenButton.title = QRGenButton:CreateFontString(nil, "OVERLAY")
     QRGenButton.title:SetFontObject("GameFontHighlight")
 
